@@ -1,4 +1,4 @@
-(defproject routes "0.1.0"
+(defproject routes "0.1.1-SNAPSHOT"
   :description "URL-driven routes handling"
   :url "https://github.com/chbrown/routes-clojure"
   :license {:name "Eclipse Public License"
