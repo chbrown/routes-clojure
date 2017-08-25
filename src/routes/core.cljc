@@ -7,23 +7,13 @@
       (generate-path routes {:endpoint form, ...params})
 
   The main protocols to extend are Routes and Pattern."
-  (:require [clojure.string :as str])
-  #?(:clj  (:import (java.util Map Set)
-                    (clojure.lang Keyword IPersistentVector Seqable Sequential))
-     :cljs (:import (cljs.core Keyword IMap ISet ISeqable ISequential IVector))))
+  (:require [routes.macros #?(:clj :refer :cljs :refer-macros) [extend-types]]
+            [clojure.string :as str])
+  #?(:clj (:import (clojure.lang Keyword))))
 
 (defprotocol PairSeq
   "Common protocol for treating both sequences and maps as pairs of items"
   (pairs [this] "Iterate by pairs"))
-
-(extend-protocol PairSeq
-  Sequential
-  (pairs [this]
-    {:pre [(even? (count this))]}
-    (partition 2 this))
-  Map
-  (pairs [this]
-    (seq this)))
 
 (defprotocol Routes
   "Right side of a Route, to be used when the corresponding left side, the Pattern, is matched.
@@ -56,6 +46,23 @@
     extracting parameters from `m` if needed, or nil if there is a parameter
     in the pattern that's not provided in `m`."))
 
+;; PairSeq extensions
+
+; sequential-like (Clojure maps are Seqable but not Sequential)
+(extend-types #?(:clj [clojure.lang.Sequential] :cljs [List PersistentVector])
+  PairSeq
+  (pairs [this]
+    ; extend-type :pre checks don't work in ClojureScript
+    (assert (even? (count this)) "Cannot iterate odd-long sequence by pairs")
+    (partition 2 this)))
+; map-like
+(extend-types #?(:clj [clojure.lang.APersistentMap] :cljs [PersistentArrayMap])
+  PairSeq
+  (pairs [this]
+    (seq this)))
+
+;; Pattern extensions
+
 (defn- split-path
   "Split the given path (usually a suffix) at the first slash, returning a
   vector of [part remainder], or return [path \"\"] if there is no slash"
@@ -66,7 +73,7 @@
 
 (extend-protocol Pattern
   ; strings match the current path literally
-  String
+  #?(:clj String :cljs string)
   (match-pattern [this m]
     (if (empty? this)
       m
@@ -75,7 +82,7 @@
   (generate-pattern-path [this _] this)
 
   ; false never matches; true consumes the rest of the path
-  Boolean
+  #?(:clj Boolean :cljs boolean)
   (match-pattern [this m]
     (when this (assoc m :path "")))
   (generate-pattern-path [this _]
@@ -88,18 +95,21 @@
       (when (seq v)
         (assoc m this v :path remaining-path))))
   (generate-pattern-path [this m]
-    (get m this))
+    (get m this)))
 
-  ; sets are processed in whatever natural order they happen to have
-  Set
+; set-like; sets are processed in whatever natural order they happen to have
+(extend-types #?(:clj [clojure.lang.APersistentSet] :cljs [PersistentHashSet])
+  Pattern
+  ; PersistentHashSet
   (match-pattern [this m]
     (some #(match-pattern % m) this))
   (generate-pattern-path [this m]
-    (some #(generate-pattern-path % m) this))
+    (some #(generate-pattern-path % m) this)))
 
-  IPersistentVector
+; seq-like; a vector Pattern can consist of strings and keywords
+(extend-types #?(:clj [clojure.lang.Sequential] :cljs [List PersistentVector])
+  Pattern
   (match-pattern [this m]
-    ; a vector Pattern can consist of strings and keywords
     (reduce (fn [m sub-pattern]
               (when (some? m)
                 (match-pattern sub-pattern m))) m this))
@@ -108,8 +118,10 @@
       (when (not-any? nil? parts)
         (str/join parts)))))
 
-(extend-protocol Routes
-  Seqable ; or Map
+;; Routes extensions
+
+(extend-types #?(:clj [clojure.lang.Seqable] :cljs [List PersistentArrayMap PersistentVector])
+  Routes
   (resolve-endpoint [this m]
     (some (fn [[pattern routes]]
             ; Takes a route and a context/state map. If pattern matches the :remaining

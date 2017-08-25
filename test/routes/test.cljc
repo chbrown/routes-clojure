@@ -9,7 +9,7 @@
            (pairs [1 10 2 20])
            (pairs {1 10 2 20}))))
   (testing "pairs fails on non-pairable sequence"
-    (is (thrown? AssertionError (pairs [1 2 3])))))
+    (is (thrown? #?(:clj AssertionError :cljs js/Error) (pairs [1 2 3])))))
 
 (def store-routes
   ["/" {"customers" {["/" :id] :customers
