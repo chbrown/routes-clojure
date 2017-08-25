@@ -87,6 +87,21 @@ There are a lot of data-driven (i.e., routes-as-data, as opposed to imperative C
 * [silk](https://github.com/DomKM/silk)
 
 
+## Development
+
+Run Clojure tests:
+
+    lein with-profile test test
+
+Run the ClojureScript tests:
+
+    lein with-profile test doo rhino test once
+
+Compile production JavaScript output:
+
+    lein cljsbuild once production
+
+
 ## License
 
 Copyright © 2017 Christopher Brown. [Eclipse Public License - v 1.0](https://www.eclipse.org/legal/epl-v10.html).
