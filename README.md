@@ -1,5 +1,9 @@
 ## `routes`
 
+[![Clojars Project](https://img.shields.io/clojars/v/routes.svg)](https://clojars.org/routes)
+[![Travis CI Build Status](https://travis-ci.org/chbrown/routes-clojure.svg?branch=master)](https://travis-ci.org/chbrown/routes-clojure)
+[![Coverage Status](https://coveralls.io/repos/github/chbrown/routes-clojure/badge.svg?branch=master)](https://coveralls.io/github/chbrown/routes-clojure?branch=master)
+
 `routes` for Clojure is inspired and heavily influenced in implementation by [`bidi`](https://github.com/juxt/bidi),
 but works more like a language than a regular expression.
 
