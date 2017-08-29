@@ -141,5 +141,5 @@
             (if (= routes (:endpoint m))
               (generate-pattern-path pattern m)
               (when (satisfies? Routes routes)
-                (when-let [matched-url (generate-path routes m)]
-                  (str (generate-pattern-path pattern m) matched-url))))) (pairs this))))
+                (when-let [routes-path (generate-path routes m)]
+                  (str (generate-pattern-path pattern m) routes-path))))) (pairs this))))
