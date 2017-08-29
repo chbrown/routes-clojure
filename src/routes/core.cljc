@@ -138,8 +138,9 @@
                       (assoc :endpoint routes)))))) (pairs this)))
   (generate-path [this m]
     (some (fn [[pattern routes]]
-            (if (= routes (:endpoint m))
-              (generate-pattern-path pattern m)
-              (when (satisfies? Routes routes)
-                (when-let [routes-path (generate-path routes m)]
-                  (str (generate-pattern-path pattern m) routes-path))))) (pairs this))))
+            (when-let [pattern-path (generate-pattern-path pattern m)]
+              (if (= routes (:endpoint m))
+                pattern-path
+                (when (satisfies? Routes routes)
+                  (when-let [routes-path (generate-path routes m)]
+                    (str pattern-path routes-path)))))) (pairs this))))
