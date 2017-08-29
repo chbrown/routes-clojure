@@ -1,7 +1,8 @@
 (ns routes.test
   (:require #?(:clj  [clojure.test :refer [deftest is testing]]
                :cljs [cljs.test :refer-macros [deftest is testing]])
-            [routes.core :as routes :refer [pairs resolve-endpoint generate-path]]))
+            [routes.core :as routes :refer [pairs resolve-endpoint generate-path]]
+            [routes.tools :refer [listing]]))
 
 (deftest util
   (testing "pairs handles sequences and maps the same way"
@@ -82,3 +83,22 @@
     (testing "set generates string for first matching pair"
       (is (= "/B2/b" (generate-path routes {:endpoint :done :b "B2"})))
       (is (= "/none" (generate-path routes {:endpoint :done}))))))
+
+; routes.tools
+
+(deftest tools
+  (testing "store listing"
+    (is (= [{:path ["/" "customers" "/" :id] :endpoint :customers     :keys [:id]}
+            {:path ["/" "customers" ""]      :endpoint :customers}
+            {:path ["/" "products" "/" :id]  :endpoint :products      :keys [:id]}
+            {:path ["/" "products" ""]       :endpoint :products}
+            {:path ["/" "faq/" :page]        :endpoint :faq-page      :keys [:page]}
+            {:path ["/" "order-lookup/" :id] :endpoint :order-lookup  :keys [:id]}]
+           (listing store-routes))))
+  (testing "set listing"
+    (is (= [{:path ["/" "a"] :endpoint :done}
+            {:path ["/" "b"] :endpoint :done}]
+           (listing {"/" [#{"a" "b"} :done]}))))
+  (testing "boolean listing"
+    (is (= [{:path ["/" "a" true] :endpoint :done}]
+           (listing {"/" {["a" true] :done ["b" false] :fail}})))))
