@@ -1,7 +1,7 @@
 (ns routes.test
-  (:require [clojure.test #?(:clj :refer :cljs :refer-macros) [deftest is testing]]
+  (:require [clojure.test #?(:clj :refer :cljs :refer-macros) [deftest is are testing]]
             [routes.core :as routes :refer [pairs resolve-endpoint generate-path]]
-            [routes.tools :refer [listing]]))
+            [routes.tools :refer [RoutesListing PatternListing listing]]))
 
 (deftest util
   (testing "pairs handles sequences and maps the same way"
@@ -108,4 +108,9 @@
            (listing {"/" [#{"a" "b"} :done]}))))
   (testing "boolean listing"
     (is (= [{:path ["/" "a" true] :endpoint :done}]
-           (listing {"/" (hash-map ["a" true] :done ["b" false] :fail)})))))
+           (listing {"/" (hash-map ["a" true] :done ["b" false] :fail)}))))
+  (testing "listing protocol satisfaction"
+    (are [x] (satisfies? RoutesListing x)
+      (hash-map) {} [] (list "/" :done))
+    (are [x] (satisfies? PatternListing x)
+      "" "/" true false :done ::done #{} (list "/" :page) [])))
