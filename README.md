@@ -82,6 +82,25 @@ The endpoint result for the path `/api/v2/customers/chb` would be `:customers :p
     (though this is for patterns and you probably won't call it directly)
 
 
+## Quick-start example
+
+    (ns user
+      (:require [routes.core :refer [resolve-endpoint generate-path]]))
+
+    (def routes
+      {"/login" :login
+       ["/wiki/" :page] :wiki})
+
+    (resolve-endpoint routes {:path "/wiki/Welcome"})
+    ;=> {:endpoint :wiki :page "Welcome"}
+
+    (generate-path routes {:endpoint :login})
+    ;=> "/login"
+
+    (generate-path routes {:endpoint :wiki :page "Contact"})
+    ;=> "/wiki/Contact"
+
+
 ## Alternatives
 
 There are a lot of data-driven (i.e., routes-as-data, as opposed to imperative Compojure-style) cross-platform routing libraries out there.
