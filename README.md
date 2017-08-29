@@ -116,6 +116,16 @@ Compile production JavaScript output:
 
     lein cljsbuild once production
 
+Publish to Clojars with version as specified in `project.clj` but without the `-SNAPSHOT` specifier:
+
+    lein release
+
+Bump minor version without publishing:
+
+    lein do vcs assert-committed, \
+      change version leiningen.release/bump-version :minor, \
+      vcs commit, vcs tag
+
 
 ## Testing
 
