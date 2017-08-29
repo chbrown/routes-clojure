@@ -35,31 +35,45 @@ Another use-case is to contextualize a whole group of routes.
 For example, suppose you have some routes:
 
     (def store-resource-routes
-      {"customers" {["/" :id] :customers
-                    ""        :customers}
-       "products"  {["/" :id] :products
-                    ""        :products}})
+      {"/customers" {["/" :id] :customers
+                     ""        :customers}
+       "/products"  {["/" :id] :products
+                     ""        :products}})
 
 And you wanted to merge and group these under two paths,
 `/api/v1` and `/api/v2`,
 but not write the whole thing out twice.
 Due to the greedy nature of `bidi`'s endpoint matching, this would be impossible;
-you could never access
+you could never generate paths for any of the api versions besides the first,
+and you could not tell which api version a path used from the matched-route's `:route-params`.
 
-In this library, `routes`,
-there is a `(parameterize routes param-key param-value)` function that wraps a routes structure,
-and adds a (required) parameter to all the endpoints.
-This function creates a new instance of the `ParameterizedRoutes` record,
-which wraps the routes in an extension of the `Routes` protocol,
-which in turn requires the specified `{param-key param-value}` parameter pair.
+In this library's `routes.extra` module,
+there is a `(parameterize pattern key value)` function
+that wraps a pattern structure in an extension of the `Pattern` protocol,
+and adds a (required) parameter to all the endpoints under that pattern.
+This function creates a new instance of the `ParameterizedPattern` record,
+and, when generating a path, requires the route context to match the specified `{key value}` pair,
+and adds that same pair to the route context when resolving the endpoint from a path.
 Your routes would look like this:
 
-    ["/api/" {"v1" (parameterize store-resource-routes :api-version 1)
-              "v2" (parameterize store-resource-routes :api-version 2)}]
+    (def routes
+      ["/api/" {(parameterize "v1" :api-version 1) store-resource-routes
+                (parameterize "v2" :api-version 2) store-resource-routes}])
 
-The path for `:customers` with parameters `:api-version 1` would be `/api/v1/customers`,
-and generating a path for just `:customers` would throw an error.
-The endpoint result for the path `/api/v2/customers/chb` would be `:customers :params {:api-version 2 :id "chb"}`.
+With these routes, we can generate the path for `:customers` with parameters `:api-version 1`:
+
+    (generate-path routes {:endpoint :customers :api-version 1})
+    ;=> "/api/v1/customers"
+
+As mentioned, the parameters _must_ be provided, or else there's no match.
+
+    (generate-path routes {:endpoint :customers})
+    ;=> nil
+
+And we can resolve endpoints that specify the parameters used to match the given path:
+
+    (resolve-endpoint {:path "/api/v2/customers/chb"})
+    ;=> {:endpoint :customers :api-version 2 :id "chb"}
 
 
 ### Differences from `bidi`
