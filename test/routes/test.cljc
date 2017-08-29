@@ -7,6 +7,7 @@
 (deftest util
   (testing "pairs handles sequences and maps the same way"
     (is (= (pairs (list 1 10 2 20))
+           (pairs (hash-map 1 10 2 20))
            (pairs [1 10 2 20])
            (pairs {1 10 2 20}))))
   (testing "pairs fails on non-pairable sequence"
@@ -84,6 +85,13 @@
       (is (= "/B2/b" (generate-path routes {:endpoint :done :b "B2"})))
       (is (= "/none" (generate-path routes {:endpoint :done}))))))
 
+(deftest non-literal-types
+  (let [routes ["/" (hash-map "a" :a "b" :b)
+                true :default]]
+    (testing "hash-map works same as map literal"
+      (is (= {:endpoint :a} (resolve-endpoint routes {:path "/a"})))
+      (is (= {:endpoint :default} (resolve-endpoint routes {:path "/other"}))))))
+
 ; routes.tools
 
 (deftest tools
@@ -101,4 +109,4 @@
            (listing {"/" [#{"a" "b"} :done]}))))
   (testing "boolean listing"
     (is (= [{:path ["/" "a" true] :endpoint :done}]
-           (listing {"/" {["a" true] :done ["b" false] :fail}})))))
+           (listing {"/" (hash-map ["a" true] :done ["b" false] :fail)})))))

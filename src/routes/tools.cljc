@@ -62,7 +62,8 @@
     ; handle leaf endpoint
     (list (assoc m :endpoint routes))))
 
-(extend-types #?(:clj [clojure.lang.Seqable] :cljs [List PersistentArrayMap PersistentVector])
+(extend-types #?(:clj  [clojure.lang.Seqable]
+                 :cljs [List PersistentVector PersistentArrayMap PersistentHashMap])
   RoutesListing
   (routes-listing [this m]
     (for [[pattern routes] (pairs this)

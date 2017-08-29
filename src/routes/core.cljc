@@ -56,7 +56,7 @@
     (assert (even? (count this)) "Cannot iterate odd-long sequence by pairs")
     (partition 2 this)))
 ; map-like
-(extend-types #?(:clj [clojure.lang.APersistentMap] :cljs [PersistentArrayMap])
+(extend-types #?(:clj [clojure.lang.APersistentMap] :cljs [PersistentArrayMap PersistentHashMap])
   PairSeq
   (pairs [this]
     (seq this)))
@@ -120,7 +120,8 @@
 
 ;; Routes extensions
 
-(extend-types #?(:clj [clojure.lang.Seqable] :cljs [List PersistentArrayMap PersistentVector])
+(extend-types #?(:clj  [clojure.lang.Seqable]
+                 :cljs [List PersistentVector PersistentArrayMap PersistentHashMap])
   Routes
   (resolve-endpoint [this m]
     (some (fn [[pattern routes]]
