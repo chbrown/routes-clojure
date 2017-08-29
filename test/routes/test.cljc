@@ -13,12 +13,12 @@
     (is (thrown? #?(:clj AssertionError :cljs js/Error) (pairs [1 2 3])))))
 
 (def store-routes
-  ["/" {"customers" {["/" :id] :customers
-                     ""        :customers}
-        "products"  {["/" :id] :products
-                     ""        :products}
-        "faq/"      {:page     :faq-page}
-        ["order-lookup/" :id] :order-lookup}])
+  ["/" {"customers"    {["/" :id] :customers
+                        ""        :customers}
+        "products"     {["/" :id] :products
+                        ""        :products}
+        "faq/"         {:page     :faq-page}
+        ["order/" :id] {"/lookup" :order-lookup}}])
 
 (deftest store
   (testing "normal successful matches"
@@ -41,7 +41,7 @@
            (generate-path store-routes {:endpoint :customers :id 123})))
     (is (= "/customers"
            (generate-path store-routes {:endpoint :customers})))
-    (is (= "/order-lookup/4d5e6f"
+    (is (= "/order/4d5e6f/lookup"
            (generate-path store-routes {:endpoint :order-lookup :id "4d5e6f"}))))
 
   (testing "under-specified params for endpoint does not result in path"
@@ -95,12 +95,12 @@
 
 (deftest tools
   (testing "store listing"
-    (is (= [{:path ["/" "customers" "/" :id] :endpoint :customers     :keys [:id]}
-            {:path ["/" "customers" ""]      :endpoint :customers}
-            {:path ["/" "products" "/" :id]  :endpoint :products      :keys [:id]}
-            {:path ["/" "products" ""]       :endpoint :products}
-            {:path ["/" "faq/" :page]        :endpoint :faq-page      :keys [:page]}
-            {:path ["/" "order-lookup/" :id] :endpoint :order-lookup  :keys [:id]}]
+    (is (= [{:path ["/" "customers" "/" :id]    :endpoint :customers     :keys [:id]}
+            {:path ["/" "customers" ""]         :endpoint :customers}
+            {:path ["/" "products" "/" :id]     :endpoint :products      :keys [:id]}
+            {:path ["/" "products" ""]          :endpoint :products}
+            {:path ["/" "faq/" :page]           :endpoint :faq-page      :keys [:page]}
+            {:path ["/" "order/" :id "/lookup"] :endpoint :order-lookup  :keys [:id]}]
            (listing store-routes))))
   (testing "set listing"
     (is (= [{:path ["/" "a"] :endpoint :done}
