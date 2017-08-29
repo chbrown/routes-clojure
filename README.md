@@ -93,17 +93,33 @@ There are a lot of data-driven (i.e., routes-as-data, as opposed to imperative C
 
 ## Development
 
+Compile production JavaScript output:
+
+    lein cljsbuild once production
+
+
+## Testing
+
+* Automated tests run on [Travis CI](https://travis-ci.org/chbrown/routes-clojure).
+* Coverage results are sent to [Coveralls](https://coveralls.io/github/chbrown/routes-clojure).
+
 Run Clojure tests:
 
     lein with-profile test test
+
+Compute Clojure test coverage:
+
+    lein with-profile test cloverage
 
 Run the ClojureScript tests:
 
     lein with-profile test doo rhino test once
 
-Compile production JavaScript output:
+Run the ClojureScript tests on Chrome:
 
-    lein cljsbuild once production
+    npm install -g karma-cli
+    npm install karma karma-cljs-test karma-chrome-launcher
+    lein with-profile test doo chrome test once
 
 
 ## License
