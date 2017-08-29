@@ -1,6 +1,6 @@
 (ns routes.tools
   "Tools for listing endpoints & route descriptions."
-  (:require [routes.core :as core :refer [pairs Routes]]
+  (:require [routes.core :refer [pairs Routes]]
             [routes.macros #?(:clj :refer :cljs :refer-macros) [extend-types]])
   #?(:clj (:import (clojure.lang Keyword))))
 
