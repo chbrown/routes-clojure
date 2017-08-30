@@ -132,6 +132,8 @@
   (testing "boolean listing"
     (is (= [{:path ["/" "a" true] :endpoint :done}]
            (listing {"/" (hash-map ["a" true] :done ["b" false] :fail)}))))
+  (testing "empty listing"
+    (is (empty? (listing {}))))
   (testing "parameterized listing"
     (is (= [{:path ["/api/" "v1/" "user/" :id] :endpoint :user   :keys [:api-version :id]}
             {:path ["/api/" "v1/" "status"]    :endpoint :status :keys [:api-version]}
