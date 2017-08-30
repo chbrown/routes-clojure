@@ -94,23 +94,25 @@
 
 ; routes.extra
 
-(deftest extra
+(def api-routes
   (let [resource-routes {["user/" :id] :user
-                         "status" :status}
-        routes {"/api/" {(parameterize "v1/" :api-version 1) resource-routes
-                         (parameterize "v2/" :api-version 2) resource-routes}}]
-    (testing "resolving through parameterized patterns"
-      (is (= {:endpoint :status :api-version 1}
-             (resolve-endpoint routes {:path "/api/v1/status"})))
-      (is (= {:endpoint :status :api-version 2}
-             (resolve-endpoint routes {:path "/api/v2/status"})))
-      (is (= {:endpoint :user :id "root" :api-version 2}
-             (resolve-endpoint routes {:path "/api/v2/user/root"})))
-      (is (nil? (resolve-endpoint routes {:path "/api/status"}))))
-    (testing "generating paths through parameterized patterns"
-      (is (= "/api/v1/status"
-             (generate-path routes {:endpoint :status :api-version 1})))
-      (is (nil? (generate-path routes {:endpoint :status}))))))
+                         "status" :status}]
+    {"/api/" {(parameterize "v1/" :api-version 1) resource-routes
+              (parameterize "v2/" :api-version 2) resource-routes}}))
+
+(deftest extra
+  (testing "resolving through parameterized patterns"
+    (is (= {:endpoint :status :api-version 1}
+           (resolve-endpoint api-routes {:path "/api/v1/status"})))
+    (is (= {:endpoint :status :api-version 2}
+           (resolve-endpoint api-routes {:path "/api/v2/status"})))
+    (is (= {:endpoint :user :id "root" :api-version 2}
+           (resolve-endpoint api-routes {:path "/api/v2/user/root"})))
+    (is (nil? (resolve-endpoint api-routes {:path "/api/status"}))))
+  (testing "generating paths through parameterized patterns"
+    (is (= "/api/v1/status"
+           (generate-path api-routes {:endpoint :status :api-version 1})))
+    (is (nil? (generate-path api-routes {:endpoint :status})))))
 
 ; routes.tools
 
