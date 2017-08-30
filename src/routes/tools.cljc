@@ -1,8 +1,13 @@
 (ns routes.tools
   "Tools for listing endpoints & route descriptions."
   (:require [routes.core :refer [pairs Routes]]
+            ; explicitly requiring routes.extra is needed for when foreign libs
+            ; (:require [routes.tools] ...), otherwise Java chokes on the import below.
+            ; TODO: not sure why.
+            [routes.extra]
             [routes.macros #?(:clj :refer :cljs :refer-macros) [extend-types]])
-  #?(:clj (:import (clojure.lang Keyword))))
+  (:import #?(:clj (clojure.lang Keyword))
+           (routes.extra ParameterizedPattern)))
 
 (defprotocol RoutesListing
   (routes-listing [this m]
@@ -38,6 +43,12 @@
         (update :keys conjv this)
         (update :path conjv this)
         (list))))
+
+; apparently this doesn't work as part of the extend-protocol above :( ?!?
+(extend-type ParameterizedPattern
+  PatternListing
+  (pattern-listing [this m]
+    (pattern-listing (:pattern this) (update m :keys conjv (:key this)))))
 
 ; set
 (extend-types #?(:clj [clojure.lang.APersistentSet] :cljs [PersistentHashSet])
