@@ -4,10 +4,10 @@
             ; explicitly requiring routes.extra is needed for when foreign libs
             ; (:require [routes.tools] ...), otherwise Java chokes on the import below.
             ; TODO: not sure why.
-            [routes.extra]
+            [routes.extra #?@(:cljs [:refer [ParameterizedPattern]])]
             [routes.macros #?(:clj :refer :cljs :refer-macros) [extend-types]])
-  (:import #?(:clj (clojure.lang Keyword))
-           (routes.extra ParameterizedPattern)))
+  #?(:clj (:import (clojure.lang Keyword)
+                   (routes.extra ParameterizedPattern))))
 
 (defprotocol RoutesListing
   (routes-listing [this m]
