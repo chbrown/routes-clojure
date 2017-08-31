@@ -67,7 +67,7 @@
   "Split the given path (usually a suffix) at the first slash, returning a
   vector of [part remainder], or return [path \"\"] if there is no slash"
   [path]
-  (if-let [next-slash (str/index-of path \/)]
+  (if-let [next-slash (some-> path (str/index-of \/))]
     [(subs path 0 next-slash) (subs path next-slash)]
     [path ""]))
 
@@ -77,7 +77,7 @@
   (match-pattern [this m]
     (if (empty? this)
       m
-      (when (str/starts-with? (:path m) this)
+      (when (some-> (:path m) (str/starts-with? this))
         (update m :path subs (count this)))))
   (generate-pattern-path [this _] this)
 
