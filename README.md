@@ -119,9 +119,32 @@ And we can resolve endpoints that specify the parameters used to match the given
 
 There are a lot of data-driven (i.e., routes-as-data, as opposed to imperative Compojure-style) cross-platform routing libraries out there.
 
-* [bidi](https://github.com/juxt/bidi)
+* [bidi](https://github.com/juxt/bidi) (**bi**-**di**rectional "URI dispatch")
+  - `bidi` was not the first data-driven router library (first commit was 2013-12-20), but it's been the most successful.
+  - It's one of the simplest, perhaps due to being one of the most opinionated / restrictive.
+  - This library is most directly derived from `bidi`; see above for the important differences.
+* [reitit](https://github.com/metosin/reitit)
+  - Very much like `bidi`, but with more introspection about the path.
+  - Perhaps the most similar of these libraries, in spirit, to `routes`,
+    though I started from `bidi` (`reitit`'s first commit was 2017-08-07, `routes`'s was 2017-08-24)
+  - Great [documentation](https://metosin.github.io/reitit/)!
 * [ataraxy](https://github.com/weavejester/ataraxy), from Mr. Compojure himself.
-* [silk](https://github.com/DomKM/silk)
+  - Very much like `bidi`, but focused on Ring integration
+  - More support for dispatching on properties of the full HTTP request, as opposed to just the URI/path
+  - First commit: 2015-12-12
+* [gudu](https://github.com/thatismatt/gudu) "**G**enerate **U**RL, **D**egenerate **U**RL"
+  - Very much like `bidi`, but more of a DSL, oriented around URL conventions
+    (e.g., slashes separate path components)
+  - First commit: 2013-03-10
+* [bide](https://github.com/funcool/bide)
+  - Very much like `bidi`, but patterns are described as strings rather than data structures
+    (e.g., `bidi`'s `["/account/" [[[:account-uuid "/" :page-uuid] :account/page]]]` becomes
+           `bide`'s `["/account/:account-uuid/:page-uuid" :account/page]`).
+  - Tighter integration with the browser: "It [bide] uses goog.History API under the hood"
+  - First commit: 2016-08-27
+* [silk](https://github.com/DomKM/silk) "Isomorphic Clojure[Script] Routing"
+  - Very much like `bidi`, but with more helper functions for preparing path components, e.g. `(silk/int :id)`
+  - First commit: 2014-06-28
 
 
 ## Development
