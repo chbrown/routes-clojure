@@ -123,7 +123,7 @@ There are a lot of data-driven (i.e., routes-as-data, as opposed to imperative C
   - `bidi` was not the first data-driven router library (first commit was 2013-12-20), but it's been the most successful.
   - It's one of the simplest, perhaps due to being one of the most opinionated / restrictive.
   - This library is most directly derived from `bidi`; see above for the important differences.
-* [reitit](https://github.com/metosin/reitit)
+* [reitit](https://github.com/metosin/reitit) ("reitit" is Finnish for "routes")
   - Very much like `bidi`, but with more introspection about the path.
   - Perhaps the most similar of these libraries, in spirit, to `routes`,
     though I started from `bidi` (`reitit`'s first commit was 2017-08-07, `routes`'s was 2017-08-24)
