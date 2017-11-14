@@ -144,3 +144,21 @@
                 (when (satisfies? Routes routes)
                   (when-let [routes-path (generate-path routes m)]
                     (str pattern-path routes-path)))))) (pairs this))))
+
+;; ring integration (does not require any ring libraries)
+
+(defn make-handler
+  "Create a Ring handler (a function that takes a request and returns a response)
+  from the given Routes that resolves the endpoint from the request's URI,
+  maps the endpoint to a handler, and calls the handler with the request.
+  Sets :route-params on the request the resolved endpoint map, sans :endpoint.
+  Throws if no endpoint can be resolved."
+  ([routes endpoint->handler]
+   (fn routes-handler [{:keys [uri] :as request}]
+     (if-let [{:keys [endpoint] :as m} (resolve-endpoint routes {:path uri})]
+       (let [handler (endpoint->handler endpoint)
+             route-params (dissoc m :endpoint)]
+         (handler (update request :route-params merge route-params)))
+       (throw (ex-info "Cannot resolve endpoint from request" request)))))
+  ([routes]
+   (make-handler routes identity)))

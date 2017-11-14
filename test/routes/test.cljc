@@ -92,6 +92,43 @@
       (is (= {:endpoint :a} (resolve-endpoint routes {:path "/a"})))
       (is (= {:endpoint :default} (resolve-endpoint routes {:path "/other"}))))))
 
+(def store-handlers
+  "Handlers for all endpoints in store-routes,
+  with alternative syntaxes for destructuring/unpacking route params"
+  {:customers    (fn [req]
+                   (if-let [id (-> req :route-params :id)]
+                     (str "Customer Page for " id)
+                     "Customers Listing"))
+   :products     (fn [{{id :id} :route-params}]
+                   (if id
+                     (str "Product #" id)
+                     "Products Listing"))
+   :faq-page     (fn [{:keys [route-params]}]
+                   (str "FAQ: " (:page route-params)))
+   :order-lookup (fn [req]
+                   (str "Order Lookup #" (get-in req [:route-params :id])))})
+
+(deftest ring-integration
+  (let [router (routes/make-handler {["/" true] (fn [_] "Index")})]
+    (testing "simple ring catch-all"
+      (is (= "Index" (router {:uri "/"})))
+      (is (= "Index" (router {:uri "/some/long/path"})))))
+  (let [store-router (routes/make-handler store-routes store-handlers)]
+    (testing "ring routing success"
+      (is (= "Customers Listing"
+             (store-router {:uri "/customers"})))
+      (is (= "Product #123"
+             (store-router {:uri "/products/123"})))
+      (is (= "FAQ: shipping-policies"
+             (store-router {:uri "/faq/shipping-policies"})))
+      (is (= "Order Lookup #zaqwsx"
+             (store-router {:uri "/order/zaqwsx/lookup"}))))
+    (testing "ring routing failure"
+      (is (thrown-with-msg?
+           #?(:clj RuntimeException :cljs :default)
+           #"^Cannot resolve endpoint from request$"
+           (store-router {:uri "/support"}))))))
+
 ; routes.extra
 
 (def api-routes
