@@ -19,10 +19,10 @@
                                    :output-to "target/test/main.js"
                                    :main routes.runner
                                    :optimizations :whitespace}}]}
-  :profiles {:test {:doo {:paths {:rhino "lein run -m org.mozilla.javascript.tools.shell.Main"}}
-                    :plugins [[lein-doo "0.1.8"]
-                              [lein-cloverage "1.0.10"]]}
-             :dev {:dependencies [[org.clojure/tools.namespace "0.3.0-alpha3"]
-                                  [org.clojure/tools.trace "0.7.9"]]
-                   :source-paths ["dev"]
-                   :repl-options {:init-ns user}}})
+  :profiles {:dev  {:plugins [[lein-doo "0.1.8"]
+                              [lein-cloverage "1.0.10"]]
+                    :doo {:paths {:rhino "lein run -m org.mozilla.javascript.tools.shell.Main"}}}
+             :repl {:dependencies [[org.clojure/tools.namespace "0.3.0-alpha3"]
+                                   [org.clojure/tools.trace "0.7.9"]]
+                    :source-paths ["dev"]
+                    :repl-options {:init-ns user}}})

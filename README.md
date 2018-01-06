@@ -161,21 +161,21 @@ Compile production JavaScript output:
 
 Run Clojure tests:
 
-    lein with-profile test test
+    lein test
 
 Compute Clojure test coverage:
 
-    lein with-profile test cloverage
+    lein cloverage
 
 Run the ClojureScript tests:
 
-    lein with-profile test doo rhino test once
+    lein doo rhino test once
 
 Run the ClojureScript tests on Chrome:
 
     npm install -g karma-cli
     npm install karma karma-cljs-test karma-chrome-launcher
-    lein with-profile test doo chrome test once
+    lein doo chrome test once
 
 
 ## License
