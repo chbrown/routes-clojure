@@ -5,7 +5,7 @@
             ; (:require [routes.tools] ...), otherwise Java chokes on the import below.
             ; TODO: not sure why.
             [routes.extra #?@(:cljs [:refer [ParameterizedPattern]])]
-            [routes.macros #?(:clj :refer :cljs :refer-macros) [extend-types]])
+            [routes.macros :refer [extend-types] :include-macros true])
   #?(:clj (:import (clojure.lang Keyword)
                    (routes.extra ParameterizedPattern))))
 

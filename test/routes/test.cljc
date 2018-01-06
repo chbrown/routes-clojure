@@ -1,5 +1,5 @@
 (ns routes.test
-  (:require [clojure.test #?(:clj :refer :cljs :refer-macros) [deftest is are testing]]
+  (:require [clojure.test :refer [deftest is are testing]]
             [routes.core :as routes :refer [pairs resolve-endpoint generate-path]]
             [routes.extra :refer [parameterize]]
             [routes.tools :refer [RoutesListing PatternListing listing]]))

@@ -7,7 +7,7 @@
       (generate-path routes {:endpoint form, ...params})
 
   The main protocols to extend are Routes and Pattern."
-  (:require [routes.macros #?(:clj :refer :cljs :refer-macros) [extend-types]]
+  (:require [routes.macros :refer [extend-types] :include-macros true]
             [clojure.string :as str])
   #?(:clj (:import (clojure.lang Keyword))))
 
