@@ -22,7 +22,7 @@
                                    :output-to "target/test/main.js"
                                    :main routes.runner
                                    :optimizations :whitespace}}]}
-  :profiles {:dev  {:plugins [[lein-doo "0.1.8"]
+  :profiles {:dev  {:plugins [[lein-doo "0.1.10"]
                               [lein-cloverage "1.0.10"]]
                     :doo {:paths {:rhino "lein run -m org.mozilla.javascript.tools.shell.Main"}}}
              :repl {:dependencies [[org.clojure/tools.namespace "0.3.0-alpha3"]
