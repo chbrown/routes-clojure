@@ -3,6 +3,7 @@
   (:require [routes.core :refer [Pattern match-pattern generate-pattern-path]]))
 
 (defrecord ParameterizedPattern [pattern key value]
+  ; ParameterizedPattern is retrofitted to implement PatternListing in routes.tools
   Pattern
   (match-pattern [_ m]
     (match-pattern pattern (assoc m key value)))
