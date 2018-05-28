@@ -3,6 +3,9 @@
   :url "https://github.com/chbrown/routes-clojure"
   :license {:name "Eclipse Public License"
             :url "https://www.eclipse.org/legal/epl-v10.html"}
+  :pom-addition [:developers [:developer
+                              [:name "Christopher Brown"]
+                              [:email "io@henrian.com"]]]
   :deploy-repositories [["releases" :clojars]]
   :dependencies [[org.clojure/clojure "1.8.0"]
                  [org.clojure/clojurescript "1.9.946"]]
