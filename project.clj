@@ -27,5 +27,4 @@
                     :doo {:paths {:rhino "lein run -m org.mozilla.javascript.tools.shell.Main"}}}
              :repl {:dependencies [[org.clojure/tools.namespace "0.3.0-alpha3"]
                                    [org.clojure/tools.trace "0.7.9"]]
-                    :source-paths ["dev"]
-                    :repl-options {:init-ns user}}})
+                    :source-paths ["dev"]}})
