@@ -1,6 +1,7 @@
 ## `routes`
 
 [![Clojars Project](https://img.shields.io/clojars/v/routes.svg)](https://clojars.org/routes)
+[![Codox-generated documentation for master](https://img.shields.io/badge/docs-master-blue.svg)](https://chbrown.github.io/routes-clojure/master/)
 [![Travis CI Build Status](https://travis-ci.org/chbrown/routes-clojure.svg?branch=master)](https://travis-ci.org/chbrown/routes-clojure)
 [![Coverage Status](https://coveralls.io/repos/github/chbrown/routes-clojure/badge.svg?branch=master)](https://coveralls.io/github/chbrown/routes-clojure?branch=master)
 
